@@ -1,4 +1,28 @@
-main()
-{
-   return true;
+for (NSNumber *timestamp in timestampArray) {
+  // Create Start Date
+  NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:icaltime_as_timet([timestamp doubleValue])];
+
+  // Ignore Before Earliest Date
+  if ([startDate compare:earliestDate] == NSOrderedAscending) {
+      continue;
+  }
+
+  // Ignore EXDATE
+  BOOL isExcludedDate = NO;
+  for (NSDate *excludedDate in excludedDates) {
+      if ([startDate isEqualToDate:excludedDate]) {
+          isExcludedDate = YES;
+      }
+  }
+  if (isExcludedDate == YES) {
+      continue;
+  }
+
+  // Ignore After Latest Date
+  if ([startDate compare:latestDate] == NSOrderedDescending) {
+      continue;
+  }
+
+  // Save Valid Start Date
+  [datesArray addObject:startDate];
 }
